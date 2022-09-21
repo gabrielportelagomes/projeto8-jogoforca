@@ -1,0 +1,112 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+* {
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+.app {
+    width: 800px;
+    height: 100%;
+    margin: 70px auto 0 auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.topo {
+    display: flex;
+}
+
+.forca {
+    width: 60%;
+    margin-bottom: 40px;
+}
+
+.forca img {
+    width: 90%;
+    margin-left: 10px;
+}
+
+.direita {
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+}
+
+.sortear {
+    margin-top: 30px;
+    position: relative;
+}
+
+.sortear button {
+    width: 150px;
+    height: 40px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    position: absolute;
+    top: 0;
+    right: 30px;
+    background-color: #27ae60;
+}
+
+.palavra {
+    background-color: yellowgreen;
+}
+
+.alfabeto {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    margin-bottom: 40px;
+}
+
+.letra {
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #79818A;
+    background-color: #9FAAB5;
+}
+
+.palpite {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.palpite p {
+    font-size: 20px;
+    font-weight: 400;
+    margin-right: 20px;
+}
+
+.palpite input {
+    width: 300px;
+    height: 40px;
+    margin-right: 20px;
+    border: 3px solid black;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.palpite button {
+    width: 80px;
+    height: 40px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #417bad;
+    background-color: #e1ecf4;
+    border: 2px solid #8Bb3cf;
+    border-radius: 5px;
+}
