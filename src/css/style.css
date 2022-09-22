@@ -32,11 +32,13 @@
     display: flex;
     flex-direction: column;
     margin-bottom: 40px;
+    position: relative;
 }
 
 .sortear {
-    margin-top: 30px;
-    position: relative;
+    position: absolute;
+    top: 40px;
+    right: 60px;
 }
 
 .sortear button {
@@ -47,17 +49,19 @@
     color: #ffffff;
     border: none;
     border-radius: 5px;
-    position: absolute;
-    top: 0;
-    right: 30px;
     background-color: #27ae60;
+    cursor: pointer;
 }
 
 .palavra {
-    background-color: yellowgreen;
+    position: absolute;
+    bottom: 40px;
+    right: 60px;
+    font-size: 35px;
+    font-weight: 700;
 }
 
-.alfabeto {
+.letras {
     display: grid;
     justify-content: center;
     align-items: center;
@@ -73,9 +77,28 @@
     justify-content: center;
     align-items: center;
     font-size: 18px;
+}
+
+.inicial {
     font-weight: 700;
     color: #79818A;
     background-color: #9FAAB5;
+    border: none;
+}
+
+.iniciado {
+    font-weight: 700;
+    color: #39739D;
+    background-color: #E1ECF4;
+    border: 2px solid #8BB3CF;
+    cursor: pointer;
+}
+
+.selecionado {
+    font-weight: 700;
+    color: #79818A;
+    background-color: #9FAAB5;
+    border: none;
 }
 
 .palpite {
