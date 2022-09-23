@@ -18,9 +18,13 @@ export default function App() {
     const [erros, setErros] = useState(0)
     const [acertos, setAcertos] = useState(0)
     const [palavraSorteada, setPalavraSorteada] = useState([])
+    const [desabilitado, setDesabilitado] = useState(true)
+    const [classeLetra, setClasseLetra] = useState("letra inicial")
+    const [iniciado, setIniciado] = useState(false)
 
     function selecionarLetra(letra, index) {
         alert(letra)
+        setIniciado(true)
         const novaLetrasSelecionadas = [...letrasSelecionadas, letra]
         setLetrasSelecionadas(novaLetrasSelecionadas)
         const novoArrayOculto = arrayPalavra
@@ -28,7 +32,7 @@ export default function App() {
             alert("tem")
             let indexPalavra = palavraSorteada.indexOf(letra)
             let quantidadeAcertos = 0
-            while (indexPalavra != -1) {
+            while (indexPalavra !== -1) {
                 novoArrayOculto[indexPalavra]= letra
                 indexPalavra = palavraSorteada.indexOf(letra, indexPalavra + 1)
                 quantidadeAcertos = acertos + quantidadeAcertos + 1
@@ -70,6 +74,9 @@ export default function App() {
         setPalavraSorteada(novaPalavra)
         const palavraoculta = novaPalavra.map(l => " _")
         setArrayPalavra(palavraoculta)
+        setDesabilitado(false)
+        setClasseLetra("letra iniciado")
+        setIniciado(true)
     }
 
     console.log(palavraSorteada)
@@ -77,6 +84,10 @@ export default function App() {
 
     function indicator() {
         return Math.random() - 0.5;
+    }
+
+    function chutar() {
+        alert("chute")
     }
 
     return (
@@ -93,12 +104,12 @@ export default function App() {
                 </div>
             </div>
             <div className="letras">
-                {alfabeto.map((a, index) => <button className="letra inicial" onClick={() => selecionarLetra(a, index)} key={index}>{a.toUpperCase()}</button>)}
+                {alfabeto.map((a, index) => <button className={letrasSelecionadas.includes(a) ? "letra selecionado" : `${classeLetra}`} disabled={!iniciado ? desabilitado : letrasSelecionadas.includes(a) ? true : false} onClick={() => selecionarLetra(a, index)} key={index}>{a.toUpperCase()}</button>)}
             </div>
             <div className="palpite">
                 <p>Já sei a palavra!</p>
-                <input disabled={false}></input>
-                <button>Chutar</button>
+                <input disabled={desabilitado}></input>
+                <button disabled={desabilitado} onClick={chutar}>Chutar</button>
             </div>
         </div>
     );
