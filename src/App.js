@@ -12,15 +12,33 @@ import palavras from "./palavras"
 
 export default function App() {
     const alfabeto = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-    const [letraSelecionada, setLetraSelecionada] = useState("")
+    const [letrasSelecionadas, setLetrasSelecionadas] = useState([])
     const [arrayPalavra, setArrayPalavra] = useState([])
     const [errosImagem, setErrosImagem] = useState(forca0)
     const [erros, setErros] = useState(0)
+    const [acertos, setAcertos] = useState(0)
     const [palavraSorteada, setPalavraSorteada] = useState([])
 
     function selecionarLetra(letra, index) {
+        alert(letra)
+        const novaLetrasSelecionadas = [...letrasSelecionadas, letra]
+        setLetrasSelecionadas(novaLetrasSelecionadas)
+        const novoArrayOculto = arrayPalavra
         if (palavraSorteada.includes(letra)) {
             alert("tem")
+            let indexPalavra = palavraSorteada.indexOf(letra)
+            let quantidadeAcertos = 0
+            while (indexPalavra != -1) {
+                novoArrayOculto[indexPalavra]= letra
+                indexPalavra = palavraSorteada.indexOf(letra, indexPalavra + 1)
+                quantidadeAcertos = acertos + quantidadeAcertos + 1
+                console.log("acertos: " + quantidadeAcertos)
+            }
+            setAcertos(quantidadeAcertos)
+            setArrayPalavra(novoArrayOculto)
+            if(quantidadeAcertos === palavraSorteada.length) {
+                alert("você ganhou")
+            }
         } else {
             const quantidadeErros = erros + 1
             console.log("erros: " + quantidadeErros)
@@ -43,14 +61,19 @@ export default function App() {
             }
         }
     }
+    console.log(letrasSelecionadas)
+    console.log(arrayPalavra)
+    
 
     function sortearPalavra() {
         const novaPalavra = palavras.sort(indicator)[0].split('')
         setPalavraSorteada(novaPalavra)
         const palavraoculta = novaPalavra.map(l => " _")
         setArrayPalavra(palavraoculta)
-        console.log(arrayPalavra)
     }
+
+    console.log(palavraSorteada)
+    console.log(palavraSorteada.length)
 
     function indicator() {
         return Math.random() - 0.5;
