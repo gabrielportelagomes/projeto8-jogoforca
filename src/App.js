@@ -21,26 +21,28 @@ export default function App() {
     const [desabilitado, setDesabilitado] = useState(true)
     const [classeLetra, setClasseLetra] = useState("letra inicial")
     const [iniciado, setIniciado] = useState(false)
+    const [palavraCompara, setPalavraCompara] = useState([])
 
     function selecionarLetra(letra, index) {
         alert(letra)
         setIniciado(true)
         const novaLetrasSelecionadas = [...letrasSelecionadas, letra]
+        console.log(novaLetrasSelecionadas)
         setLetrasSelecionadas(novaLetrasSelecionadas)
         const novoArrayOculto = arrayPalavra
-        if (palavraSorteada.includes(letra)) {
+        if (palavraCompara.includes(letra)) {
             alert("tem")
-            let indexPalavra = palavraSorteada.indexOf(letra)
+            let indexPalavra = palavraCompara.indexOf(letra)
             let quantidadeAcertos = 0
             while (indexPalavra !== -1) {
-                novoArrayOculto[indexPalavra]= letra
-                indexPalavra = palavraSorteada.indexOf(letra, indexPalavra + 1)
+                novoArrayOculto[indexPalavra] = palavraSorteada[indexPalavra]
+                indexPalavra = palavraCompara.indexOf(letra, indexPalavra + 1)
                 quantidadeAcertos = acertos + quantidadeAcertos + 1
                 console.log("acertos: " + quantidadeAcertos)
             }
             setAcertos(quantidadeAcertos)
             setArrayPalavra(novoArrayOculto)
-            if(quantidadeAcertos === palavraSorteada.length) {
+            if (quantidadeAcertos === palavraCompara.length) {
                 alert("você ganhou")
             }
         } else {
@@ -61,26 +63,31 @@ export default function App() {
                 setErrosImagem(forca5)
             } else if (quantidadeErros === 6) {
                 setErrosImagem(forca6)
-                console.log("perdeu")
+                /* console.log("perdeu") */
             }
         }
     }
-    console.log(letrasSelecionadas)
-    console.log(arrayPalavra)
-    
+    /* console.log(letrasSelecionadas)
+    console.log(arrayPalavra) */
+
 
     function sortearPalavra() {
-        const novaPalavra = palavras.sort(indicator)[0].split('')
-        setPalavraSorteada(novaPalavra)
-        const palavraoculta = novaPalavra.map(l => " _")
+        const novaPalavra = palavras.sort(indicator)[0]
+        const arrayPalavraCompara = novaPalavra.normalize('NFD').replace(/[\u0300-\u036f]/g, "").split('')
+        console.log(arrayPalavraCompara)
+        setPalavraCompara(arrayPalavraCompara)
+        const arrayNovaPalavra = novaPalavra.split('')
+        console.log(arrayNovaPalavra)
+        setPalavraSorteada(arrayNovaPalavra)
+        const palavraoculta = arrayPalavraCompara.map(l => " _")
         setArrayPalavra(palavraoculta)
         setDesabilitado(false)
         setClasseLetra("letra iniciado")
         setIniciado(true)
     }
 
-    console.log(palavraSorteada)
-    console.log(palavraSorteada.length)
+    /* console.log(palavraSorteada)
+    console.log(palavraSorteada.length) */
 
     function indicator() {
         return Math.random() - 0.5;
