@@ -1,6 +1,6 @@
 import { useState } from "react"
-import "./css/reset.css"
-import "./css/style.css"
+import GlobalStyle from "./GlobalStyle"
+import styled from "styled-components"
 import forca0 from "./assets/img/forca0.png"
 import forca1 from "./assets/img/forca1.png"
 import forca2 from "./assets/img/forca2.png"
@@ -10,7 +10,7 @@ import forca5 from "./assets/img/forca5.png"
 import forca6 from "./assets/img/forca6.png"
 import palavras from "./palavras"
 
-export default function App() {
+function App() {
     const alfabeto = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
     const [letrasSelecionadas, setLetrasSelecionadas] = useState([])
     const [arrayPalavra, setArrayPalavra] = useState([])
@@ -20,11 +20,10 @@ export default function App() {
     const [palavraSorteada, setPalavraSorteada] = useState("")
     const [arrayPalavraSorteada, setArrayPalavraSorteada] = useState([])
     const [desabilitado, setDesabilitado] = useState(true)
-    const [classeLetra, setClasseLetra] = useState("letra inicial")
     const [iniciado, setIniciado] = useState(false)
     const [palavraCompara, setPalavraCompara] = useState([])
     const [chute, setChute] = useState("")
-    const [classePalavra, setClassePalavra] = useState("palavra")
+    const [corDaPalavra, setCorDaPalavra] = useState("#000000")
 
     function selecionarLetra(letra) {
         const novaLetrasSelecionadas = [...letrasSelecionadas, letra]
@@ -44,7 +43,7 @@ export default function App() {
             if (quantidadeAcertos === palavraCompara.length) {
                 setDesabilitado(true)
                 setLetrasSelecionadas(alfabeto)
-                setClassePalavra("palavra certa")
+                setCorDaPalavra("#228b22")
             }
         } else {
             const quantidadeErros = erros + 1
@@ -66,7 +65,7 @@ export default function App() {
                 setDesabilitado(true)
                 setLetrasSelecionadas(alfabeto)
                 setArrayPalavra(palavraSorteada)
-                setClassePalavra("palavra errada")
+                setCorDaPalavra("#ff0000")
             }
         }
     }
@@ -82,7 +81,6 @@ export default function App() {
         const palavraoculta = arrayPalavraCompara.map(l => " _")
         setArrayPalavra(palavraoculta)
         setDesabilitado(false)
-        setClasseLetra("letra iniciado")
         setIniciado(true)
     }
 
@@ -93,7 +91,7 @@ export default function App() {
         setAcertos(0)
         setLetrasSelecionadas([])
         setArrayPalavra([])
-        setClassePalavra("palavra")
+        setCorDaPalavra("#000000")
         setErrosImagem(forca0)
         setChute("")
     }
@@ -107,36 +105,187 @@ export default function App() {
         setLetrasSelecionadas(alfabeto)
         if (chute === palavraSorteada) {
             setArrayPalavra(palavraSorteada)
-            setClassePalavra("palavra certa")
+            setCorDaPalavra("#228b22")
         } else {
             setErros(6)
             setErrosImagem(forca6)
             setArrayPalavra(palavraSorteada)
-            setClassePalavra("palavra errada")
+            setCorDaPalavra("#ff0000")
         }
     }
 
     return (
-        <div className="app">
-            <div className="topo">
-                <div className="forca">
-                    <img src={errosImagem} alt="imagem que mostra o estado do jogo" data-identifier="game-image"/>
-                </div>
-                <div className="direita">
-                    <div className="sortear">
+        <Conteudo>
+            <GlobalStyle />
+            <Topo>
+                <Forca>
+                    <img src={errosImagem} alt="imagem que mostra o estado do jogo" data-identifier="game-image" />
+                </Forca>
+                <Direita>
+                    <Sortear>
                         <button onClick={sortearPalavra} data-identifier="choose-word">Escolher Palavra</button>
-                    </div>
-                    <div className={classePalavra} data-identifier="word">{arrayPalavra}</div>
-                </div>
-            </div>
-            <div className="letras">
-                {alfabeto.map((a, index) => <button className={letrasSelecionadas.includes(a) ? "letra selecionado" : `${classeLetra}`} disabled={!iniciado ? desabilitado : letrasSelecionadas.includes(a) ? true : false} onClick={() => selecionarLetra(a)} key={index} data-identifier="letter">{a.toUpperCase()}</button>)}
-            </div>
-            <div className="palpite">
+                    </Sortear>
+                    <Palavra corPalavra={corDaPalavra} data-identifier="word">{arrayPalavra}</Palavra>
+                </Direita>
+            </Topo>
+            <Letras>
+                {alfabeto.map((a, index) => <Letra incluido={letrasSelecionadas.includes(a)} estado={iniciado} disabled={!iniciado ? desabilitado : letrasSelecionadas.includes(a) ? true : false} onClick={() => selecionarLetra(a)} key={index} data-identifier="letter">{a.toUpperCase()}</Letra>)}
+            </Letras>
+            <Palpite estado={desabilitado}>
                 <p>Já sei a palavra!</p>
                 <input disabled={desabilitado} value={chute} onChange={e => setChute(e.target.value)} data-identifier="type-guess"></input>
                 <button disabled={desabilitado} onClick={chutarPalavra} data-identifier="guess-button">Chutar</button>
-            </div>
-        </div>
+            </Palpite>
+        </Conteudo>
     );
 }
+
+export default App
+
+const Conteudo = styled.div`
+    width: 800px;
+    height: 100%;
+    margin: 70px auto 0 auto;
+    display: flex;
+    flex-direction: column;
+`
+
+const Topo = styled.div`
+    display: flex;
+`
+
+const Forca = styled.div`
+    width: 60%;
+    margin-bottom: 40px;
+    img {
+        width: 90%;
+        margin-left: 10px;
+    }
+`
+
+const Direita = styled.div`
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 40px;
+    position: relative;
+`
+
+const Sortear = styled.div`
+    position: absolute;
+    top: 40px;
+    right: 60px;
+    button {
+        width: 150px;
+        height: 40px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #ffffff;
+        border: none;
+        border-radius: 5px;
+        background-color: #27ae60;
+        cursor: pointer;
+    }
+`
+
+const Palavra = styled.div`
+    position: absolute;
+    bottom: 40px;
+    right: 60px;
+    font-size: 35px;
+    font-weight: 700;
+    color: ${(props) => props.corPalavra};
+`
+
+const Letras = styled.div`
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px;
+    grid-column-gap: 10px;
+    grid-row-gap: 10px;
+    margin-bottom: 40px;
+`
+const Letra = styled.button`
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: ${(props) => {
+        if (props.estado === true) {
+            if (props.incluido === true) {
+                return "#79818A"
+            } else {
+                return "#39739D"
+            }
+        } else {
+            return "#79818A"
+        }
+    }};
+    background-color: ${(props) => {
+        if (props.estado === true) {
+            if (props.incluido === true) {
+                return "#9FAAB5"
+            } else {
+                return "#E1ECF4"
+            }
+        } else {
+            return "#9FAAB5"
+        }
+    }};
+    border: ${(props) => {
+        if (props.estado === true) {
+            if (props.incluido === true) {
+                return "none"
+            } else {
+                return "2px solid #8BB3CF"
+            }
+        } else {
+            return "none"
+        }
+    }};
+    cursor: ${(props) => {
+        if (props.estado === true) {
+            if (props.incluido === true) {
+                return "inicial"
+            } else {
+                return "pointer"
+            }
+        } else {
+            return "initial"
+        }
+    }};
+`
+
+const Palpite = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    p {
+        font-size: 20px;
+        font-weight: 400;
+        margin-right: 20px;
+    }
+    input {
+        width: 300px;
+        height: 40px;
+        margin-right: 20px;
+        border: 3px solid black;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 400;
+    }
+    button {
+        width: 80px;
+        height: 40px;
+        font-size: 18px;
+        font-weight: 700;
+        color: #417bad;
+        background-color: #e1ecf4;
+        border: 2px solid #8Bb3cf;
+        border-radius: 5px;
+        cursor: ${(props) => props.estado === true ? "initial" : "pointer"};
+    }
+`

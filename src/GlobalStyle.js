@@ -1,3 +1,5 @@
+import { createGlobalStyle } from "styled-components"
+const GlobalStyle = createGlobalStyle`
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -41,3 +43,6 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+`
+
+export default GlobalStyle
