@@ -42,6 +42,8 @@ export default function App() {
             setAcertos(quantidadeAcertos)
             setArrayPalavra(novoArrayOculto)
             if (quantidadeAcertos === palavraCompara.length) {
+                setDesabilitado(true)
+                setLetrasSelecionadas(alfabeto)
                 setClassePalavra("palavra certa")
             }
         } else {
@@ -61,19 +63,16 @@ export default function App() {
                 setErrosImagem(forca5)
             } else if (quantidadeErros === 6) {
                 setErrosImagem(forca6)
+                setDesabilitado(true)
+                setLetrasSelecionadas(alfabeto)
+                setArrayPalavra(palavraSorteada)
                 setClassePalavra("palavra errada")
             }
         }
     }
 
     function sortearPalavra() {
-        setErros(0)
-        setAcertos(0)
-        setLetrasSelecionadas([])
-        setArrayPalavra([])
-        setClassePalavra("palavra")
-        setErrosImagem(forca0)
-
+        reset()
         const novaPalavra = palavras.sort(indicator)[0]
         setPalavraSorteada(novaPalavra)
         const arrayPalavraCompara = novaPalavra.normalize('NFD').replace(/[\u0300-\u036f]/g, "").split('')
@@ -87,43 +86,56 @@ export default function App() {
         setIniciado(true)
     }
 
+    console.log(arrayPalavraSorteada)
+
+    function reset() {
+        setErros(0)
+        setAcertos(0)
+        setLetrasSelecionadas([])
+        setArrayPalavra([])
+        setClassePalavra("palavra")
+        setErrosImagem(forca0)
+        setChute("")
+    }
+
     function indicator() {
         return Math.random() - 0.5;
     }
 
     function chutarPalavra() {
-        if(chute === palavraSorteada) {
+        setDesabilitado(true)
+        setLetrasSelecionadas(alfabeto)
+        if (chute === palavraSorteada) {
             setArrayPalavra(palavraSorteada)
             setClassePalavra("palavra certa")
         } else {
-           setErros(6) 
-           setErrosImagem(forca6)
-           setArrayPalavra(palavraSorteada)
-           setClassePalavra("palavra errada")
+            setErros(6)
+            setErrosImagem(forca6)
+            setArrayPalavra(palavraSorteada)
+            setClassePalavra("palavra errada")
         }
-        setChute("")
     }
 
     return (
         <div className="app">
             <div className="topo">
                 <div className="forca">
-                    <img src={errosImagem} />
+                    <img src={errosImagem} alt="imagem que mostra o estado do jogo" data-identifier="game-image"/>
                 </div>
                 <div className="direita">
                     <div className="sortear">
-                        <button onClick={sortearPalavra}>Escolher Palavra</button>
+                        <button onClick={sortearPalavra} data-identifier="choose-word">Escolher Palavra</button>
                     </div>
-                    <div className={classePalavra}>{arrayPalavra}</div>
+                    <div className={classePalavra} data-identifier="word">{arrayPalavra}</div>
                 </div>
             </div>
             <div className="letras">
-                {alfabeto.map((a,index) => <button className={letrasSelecionadas.includes(a) ? "letra selecionado" : `${classeLetra}`} disabled={!iniciado ? desabilitado : letrasSelecionadas.includes(a) ? true : false} onClick={() => selecionarLetra(a)} key={index}>{a.toUpperCase()}</button>)}
+                {alfabeto.map((a, index) => <button className={letrasSelecionadas.includes(a) ? "letra selecionado" : `${classeLetra}`} disabled={!iniciado ? desabilitado : letrasSelecionadas.includes(a) ? true : false} onClick={() => selecionarLetra(a)} key={index} data-identifier="letter">{a.toUpperCase()}</button>)}
             </div>
             <div className="palpite">
                 <p>Já sei a palavra!</p>
-                <input disabled={desabilitado} value={chute} onChange={e => setChute(e.target.value)}></input>
-                <button disabled={desabilitado} onClick={chutarPalavra}>Chutar</button>
+                <input disabled={desabilitado} value={chute} onChange={e => setChute(e.target.value)} data-identifier="type-guess"></input>
+                <button disabled={desabilitado} onClick={chutarPalavra} data-identifier="guess-button">Chutar</button>
             </div>
         </div>
     );
