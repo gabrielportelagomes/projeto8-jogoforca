@@ -17,37 +17,35 @@ export default function App() {
     const [errosImagem, setErrosImagem] = useState(forca0)
     const [erros, setErros] = useState(0)
     const [acertos, setAcertos] = useState(0)
-    const [palavraSorteada, setPalavraSorteada] = useState([])
+    const [palavraSorteada, setPalavraSorteada] = useState("")
+    const [arrayPalavraSorteada, setArrayPalavraSorteada] = useState([])
     const [desabilitado, setDesabilitado] = useState(true)
     const [classeLetra, setClasseLetra] = useState("letra inicial")
     const [iniciado, setIniciado] = useState(false)
     const [palavraCompara, setPalavraCompara] = useState([])
+    const [chute, setChute] = useState("")
+    const [classePalavra, setClassePalavra] = useState("palavra")
 
-    function selecionarLetra(letra, index) {
-        alert(letra)
-        setIniciado(true)
+    function selecionarLetra(letra) {
         const novaLetrasSelecionadas = [...letrasSelecionadas, letra]
-        console.log(novaLetrasSelecionadas)
         setLetrasSelecionadas(novaLetrasSelecionadas)
         const novoArrayOculto = arrayPalavra
         if (palavraCompara.includes(letra)) {
-            alert("tem")
             let indexPalavra = palavraCompara.indexOf(letra)
             let quantidadeAcertos = 0
             while (indexPalavra !== -1) {
-                novoArrayOculto[indexPalavra] = palavraSorteada[indexPalavra]
+                novoArrayOculto[indexPalavra] = arrayPalavraSorteada[indexPalavra]
                 indexPalavra = palavraCompara.indexOf(letra, indexPalavra + 1)
-                quantidadeAcertos = acertos + quantidadeAcertos + 1
-                console.log("acertos: " + quantidadeAcertos)
+                quantidadeAcertos++
             }
+            quantidadeAcertos = acertos + quantidadeAcertos
             setAcertos(quantidadeAcertos)
             setArrayPalavra(novoArrayOculto)
             if (quantidadeAcertos === palavraCompara.length) {
-                alert("você ganhou")
+                setClassePalavra("palavra certa")
             }
         } else {
             const quantidadeErros = erros + 1
-            console.log("erros: " + quantidadeErros)
             setErros(quantidadeErros)
             if (quantidadeErros === 0) {
                 setErrosImagem(forca0)
@@ -63,22 +61,25 @@ export default function App() {
                 setErrosImagem(forca5)
             } else if (quantidadeErros === 6) {
                 setErrosImagem(forca6)
-                /* console.log("perdeu") */
+                setClassePalavra("palavra errada")
             }
         }
     }
-    /* console.log(letrasSelecionadas)
-    console.log(arrayPalavra) */
-
 
     function sortearPalavra() {
+        setErros(0)
+        setAcertos(0)
+        setLetrasSelecionadas([])
+        setArrayPalavra([])
+        setClassePalavra("palavra")
+        setErrosImagem(forca0)
+
         const novaPalavra = palavras.sort(indicator)[0]
+        setPalavraSorteada(novaPalavra)
         const arrayPalavraCompara = novaPalavra.normalize('NFD').replace(/[\u0300-\u036f]/g, "").split('')
-        console.log(arrayPalavraCompara)
         setPalavraCompara(arrayPalavraCompara)
         const arrayNovaPalavra = novaPalavra.split('')
-        console.log(arrayNovaPalavra)
-        setPalavraSorteada(arrayNovaPalavra)
+        setArrayPalavraSorteada(arrayNovaPalavra)
         const palavraoculta = arrayPalavraCompara.map(l => " _")
         setArrayPalavra(palavraoculta)
         setDesabilitado(false)
@@ -86,15 +87,21 @@ export default function App() {
         setIniciado(true)
     }
 
-    /* console.log(palavraSorteada)
-    console.log(palavraSorteada.length) */
-
     function indicator() {
         return Math.random() - 0.5;
     }
 
-    function chutar() {
-        alert("chute")
+    function chutarPalavra() {
+        if(chute === palavraSorteada) {
+            setArrayPalavra(palavraSorteada)
+            setClassePalavra("palavra certa")
+        } else {
+           setErros(6) 
+           setErrosImagem(forca6)
+           setArrayPalavra(palavraSorteada)
+           setClassePalavra("palavra errada")
+        }
+        setChute("")
     }
 
     return (
@@ -107,16 +114,16 @@ export default function App() {
                     <div className="sortear">
                         <button onClick={sortearPalavra}>Escolher Palavra</button>
                     </div>
-                    <div className="palavra">{arrayPalavra}</div>
+                    <div className={classePalavra}>{arrayPalavra}</div>
                 </div>
             </div>
             <div className="letras">
-                {alfabeto.map((a, index) => <button className={letrasSelecionadas.includes(a) ? "letra selecionado" : `${classeLetra}`} disabled={!iniciado ? desabilitado : letrasSelecionadas.includes(a) ? true : false} onClick={() => selecionarLetra(a, index)} key={index}>{a.toUpperCase()}</button>)}
+                {alfabeto.map((a,index) => <button className={letrasSelecionadas.includes(a) ? "letra selecionado" : `${classeLetra}`} disabled={!iniciado ? desabilitado : letrasSelecionadas.includes(a) ? true : false} onClick={() => selecionarLetra(a)} key={index}>{a.toUpperCase()}</button>)}
             </div>
             <div className="palpite">
                 <p>Já sei a palavra!</p>
-                <input disabled={desabilitado}></input>
-                <button disabled={desabilitado} onClick={chutar}>Chutar</button>
+                <input disabled={desabilitado} value={chute} onChange={e => setChute(e.target.value)}></input>
+                <button disabled={desabilitado} onClick={chutarPalavra}>Chutar</button>
             </div>
         </div>
     );

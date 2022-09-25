@@ -61,6 +61,14 @@
     font-weight: 700;
 }
 
+.certa {
+    color: green;
+}
+
+.errada {
+    color: red;
+}
+
 .letras {
     display: grid;
     justify-content: center;
