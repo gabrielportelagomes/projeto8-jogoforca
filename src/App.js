@@ -1,6 +1,9 @@
 import { useState } from "react"
 import GlobalStyle from "./GlobalStyle"
 import styled from "styled-components"
+import Jogo from "./Jogo"
+import Letras from "./Letras"
+import Chute from "./Chute"
 import forca0 from "./assets/img/forca0.png"
 import forca1 from "./assets/img/forca1.png"
 import forca2 from "./assets/img/forca2.png"
@@ -84,8 +87,6 @@ function App() {
         setIniciado(true)
     }
 
-    console.log(arrayPalavraSorteada)
-
     function reset() {
         setErros(0)
         setAcertos(0)
@@ -117,25 +118,9 @@ function App() {
     return (
         <Conteudo>
             <GlobalStyle />
-            <Topo>
-                <Forca>
-                    <img src={errosImagem} alt="imagem que mostra o estado do jogo" data-identifier="game-image" />
-                </Forca>
-                <Direita>
-                    <Sortear>
-                        <button onClick={sortearPalavra} data-identifier="choose-word">Escolher Palavra</button>
-                    </Sortear>
-                    <Palavra corPalavra={corDaPalavra} data-identifier="word">{arrayPalavra}</Palavra>
-                </Direita>
-            </Topo>
-            <Letras>
-                {alfabeto.map((a, index) => <Letra incluido={letrasSelecionadas.includes(a)} estado={iniciado} disabled={!iniciado ? desabilitado : letrasSelecionadas.includes(a) ? true : false} onClick={() => selecionarLetra(a)} key={index} data-identifier="letter">{a.toUpperCase()}</Letra>)}
-            </Letras>
-            <Palpite estado={desabilitado}>
-                <p>Já sei a palavra!</p>
-                <input disabled={desabilitado} value={chute} onChange={e => setChute(e.target.value)} data-identifier="type-guess"></input>
-                <button disabled={desabilitado} onClick={chutarPalavra} data-identifier="guess-button">Chutar</button>
-            </Palpite>
+            <Jogo enviaErrosImagem={errosImagem} enviaSortearPalavra={sortearPalavra} enviaCorDaPalavra={corDaPalavra} enviaArrayPalavra={arrayPalavra}/>
+            <Letras enviaAlfabeto={alfabeto} enviaLetrasSelecionadas={letrasSelecionadas} enviaIniciado={iniciado} enviaDesabilitado={desabilitado} enviaSelecionarLetra={selecionarLetra}/>
+            <Chute enviaDesabilitado={desabilitado} enviaChute={chute} enviasetChut={setChute} enviaChutarPalavra={chutarPalavra}/>
         </Conteudo>
     );
 }
@@ -148,144 +133,4 @@ const Conteudo = styled.div`
     margin: 70px auto 0 auto;
     display: flex;
     flex-direction: column;
-`
-
-const Topo = styled.div`
-    display: flex;
-`
-
-const Forca = styled.div`
-    width: 60%;
-    margin-bottom: 40px;
-    img {
-        width: 90%;
-        margin-left: 10px;
-    }
-`
-
-const Direita = styled.div`
-    width: 40%;
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 40px;
-    position: relative;
-`
-
-const Sortear = styled.div`
-    position: absolute;
-    top: 40px;
-    right: 60px;
-    button {
-        width: 150px;
-        height: 40px;
-        font-size: 16px;
-        font-weight: 700;
-        color: #ffffff;
-        border: none;
-        border-radius: 5px;
-        background-color: #27ae60;
-        cursor: pointer;
-    }
-`
-
-const Palavra = styled.div`
-    position: absolute;
-    bottom: 40px;
-    right: 60px;
-    font-size: 35px;
-    font-weight: 700;
-    color: ${(props) => props.corPalavra};
-`
-
-const Letras = styled.div`
-    display: grid;
-    justify-content: center;
-    align-items: center;
-    grid-template-columns: 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px 40px;
-    grid-column-gap: 10px;
-    grid-row-gap: 10px;
-    margin-bottom: 40px;
-`
-const Letra = styled.button`
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 18px;
-    font-weight: 700;
-    color: ${(props) => {
-        if (props.estado === true) {
-            if (props.incluido === true) {
-                return "#79818A"
-            } else {
-                return "#39739D"
-            }
-        } else {
-            return "#79818A"
-        }
-    }};
-    background-color: ${(props) => {
-        if (props.estado === true) {
-            if (props.incluido === true) {
-                return "#9FAAB5"
-            } else {
-                return "#E1ECF4"
-            }
-        } else {
-            return "#9FAAB5"
-        }
-    }};
-    border: ${(props) => {
-        if (props.estado === true) {
-            if (props.incluido === true) {
-                return "none"
-            } else {
-                return "2px solid #8BB3CF"
-            }
-        } else {
-            return "none"
-        }
-    }};
-    cursor: ${(props) => {
-        if (props.estado === true) {
-            if (props.incluido === true) {
-                return "inicial"
-            } else {
-                return "pointer"
-            }
-        } else {
-            return "initial"
-        }
-    }};
-`
-
-const Palpite = styled.div`
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    p {
-        font-size: 20px;
-        font-weight: 400;
-        margin-right: 20px;
-    }
-    input {
-        width: 300px;
-        height: 40px;
-        margin-right: 20px;
-        border: 3px solid black;
-        border-radius: 8px;
-        font-size: 18px;
-        font-weight: 400;
-    }
-    button {
-        width: 80px;
-        height: 40px;
-        font-size: 18px;
-        font-weight: 700;
-        color: #417bad;
-        background-color: #e1ecf4;
-        border: 2px solid #8Bb3cf;
-        border-radius: 5px;
-        cursor: ${(props) => props.estado === true ? "initial" : "pointer"};
-    }
 `
