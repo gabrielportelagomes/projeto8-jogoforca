@@ -21,8 +21,8 @@ const Topo = styled.div`
 `
 
 const Forca = styled.div`
-    width: 60%;
-    margin-bottom: 40px;
+    width: 55%;
+    margin-bottom: 45px;
     img {
         width: 90%;
         margin-left: 10px;

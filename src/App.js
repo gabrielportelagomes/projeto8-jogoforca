@@ -135,9 +135,9 @@ function App() {
 export default App
 
 const Conteudo = styled.div`
-    width: 800px;
+    width: 850px;
     height: 100%;
-    margin: 70px auto 0 auto;
+    margin: 70px auto 20px auto;
     display: flex;
     flex-direction: column;
 `
