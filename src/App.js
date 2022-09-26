@@ -25,6 +25,7 @@ function App() {
     const [desabilitado, setDesabilitado] = useState(true)
     const [iniciado, setIniciado] = useState(false)
     const [palavraCompara, setPalavraCompara] = useState([])
+    const [palavraSimples, setPalavraSimples] = useState("")
     const [chute, setChute] = useState("")
     const [corDaPalavra, setCorDaPalavra] = useState("#000000")
 
@@ -77,7 +78,9 @@ function App() {
         reset()
         const novaPalavra = palavras.sort(indicator)[0]
         setPalavraSorteada(novaPalavra)
-        const arrayPalavraCompara = novaPalavra.normalize('NFD').replace(/[\u0300-\u036f]/g, "").split('')
+        const palavraSemEspeciais = novaPalavra.normalize('NFD').replace(/[\u0300-\u036f]/g, "")
+        setPalavraSimples(palavraSemEspeciais)
+        const arrayPalavraCompara = palavraSemEspeciais.split('')
         setPalavraCompara(arrayPalavraCompara)
         const arrayNovaPalavra = novaPalavra.split('')
         setArrayPalavraSorteada(arrayNovaPalavra)
@@ -102,12 +105,16 @@ function App() {
     }
 
     function chutarPalavra() {
-        setDesabilitado(true)
-        setLetrasSelecionadas(alfabeto)
-        if (chute === palavraSorteada) {
+        if (chute === palavraSorteada || chute === palavraSimples) {
+            setDesabilitado(true)
+            setLetrasSelecionadas(alfabeto)
             setArrayPalavra(palavraSorteada)
             setCorDaPalavra("#228b22")
+        } else if (chute === "") {
+            return
         } else {
+            setDesabilitado(true)
+            setLetrasSelecionadas(alfabeto)
             setErros(6)
             setErrosImagem(forca6)
             setArrayPalavra(palavraSorteada)
@@ -118,9 +125,9 @@ function App() {
     return (
         <Conteudo>
             <GlobalStyle />
-            <Jogo enviaErrosImagem={errosImagem} enviaSortearPalavra={sortearPalavra} enviaCorDaPalavra={corDaPalavra} enviaArrayPalavra={arrayPalavra}/>
-            <Letras enviaAlfabeto={alfabeto} enviaLetrasSelecionadas={letrasSelecionadas} enviaIniciado={iniciado} enviaDesabilitado={desabilitado} enviaSelecionarLetra={selecionarLetra}/>
-            <Chute enviaDesabilitado={desabilitado} enviaChute={chute} enviasetChut={setChute} enviaChutarPalavra={chutarPalavra}/>
+            <Jogo enviaErrosImagem={errosImagem} enviaSortearPalavra={sortearPalavra} enviaCorDaPalavra={corDaPalavra} enviaArrayPalavra={arrayPalavra} />
+            <Letras enviaAlfabeto={alfabeto} enviaLetrasSelecionadas={letrasSelecionadas} enviaIniciado={iniciado} enviaDesabilitado={desabilitado} enviaSelecionarLetra={selecionarLetra} />
+            <Chute enviaDesabilitado={desabilitado} enviaChute={chute} enviaSetChute={setChute} enviaChutarPalavra={chutarPalavra} />
         </Conteudo>
     );
 }
